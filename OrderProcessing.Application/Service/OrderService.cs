@@ -27,5 +27,25 @@ namespace OrderProcessing.Application.Service
            return await _orderRepository.AddAsync(order);
 
         }
+
+        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
+        {
+            return await _orderRepository.GetAllAsync();
+        }
+
+        public Task<bool> DeleteOrderAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<OrderDto> GetOrderByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateOrderAsync(Order order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

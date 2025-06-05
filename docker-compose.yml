@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: orderprocessing-sql
+    environment:
+      SA_PASSWORD: "Test1234!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P Test1234! -Q \"SELECT 1\""]
+      interval: 10s
+      timeout: 5s
+      retries: 50
+
+  api:
+    build:
+      context: .
+      dockerfile: OrderProcessing.API/Dockerfile
+    container_name: orderprocessing-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=DB_PROCESS_ORDER;User Id=sa;Password=Test1234!;TrustServerCertificate=true;"
+    ports:
+      - "8080:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

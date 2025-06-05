@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessing.API", "OrderProcessing.API\OrderProcessing.API.csproj", "{0C4B6CAA-8B7A-48DD-9979-96D990276A3C}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessing.Infrastructure", "OrderProcessing.Infrastructure\OrderProcessing.Infrastructure.csproj", "{3862BD37-40E2-4A08-B715-D7D0835767DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessing.Tests", "OrderProcessing.Tests\OrderProcessing.Tests.csproj", "{879FA37B-237C-4EB6-BAE1-E8DB066596A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9465786E-4F3F-40F8-9259-DDD325898E5A}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

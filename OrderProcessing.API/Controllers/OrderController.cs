@@ -28,5 +28,20 @@ namespace OrderProcessing.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("list")]
+        public async Task<IActionResult> ListOrder()
+        {
+            try
+            {
+                IEnumerable<OrderDto> orderList = await _orderService.GetAllOrdersAsync();
+                return Ok(new { orderList });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -52,17 +52,22 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure HTTP pipeline
-if (app.Environment.IsDevelopment())
+app.UseDeveloperExceptionPage();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Processing API v1");
-        c.RoutePrefix = "swagger";
-    });
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Processing API v1");
+    c.RoutePrefix = "swagger";
+});
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
 }
+
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 
 app.UseHttpsRedirection();
 
