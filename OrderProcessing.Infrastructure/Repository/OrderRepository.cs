@@ -10,7 +10,7 @@ namespace OrderProcessing.Infrastructure.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDbContext _dbContext;
-
+        private readonly RabbitMqService _rabbitMqService;
         public OrderRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -23,8 +23,8 @@ namespace OrderProcessing.Infrastructure.Repository
                 _dbContext.Add(order);
                 await _dbContext.SaveChangesAsync();
 
-                return new OrderDto
-                {
+                OrderDto orderDto = new OrderDto{
+                
                     Id = order.Id,
                     OrderNumber = order.OrderNumber,
                     CreatedAt = order.CreatedAt,
@@ -38,8 +38,12 @@ namespace OrderProcessing.Infrastructure.Repository
                         UnitPrice = item.UnitPrice
                     }).ToList() ?? new List<OrderItemDto>()
                 };
-            }catch(Exception ex)
-            {                
+
+                await _rabbitMqService.SendMessage(orderDto);
+                return orderDto;
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 throw new Exception(ex.Message);
             }
