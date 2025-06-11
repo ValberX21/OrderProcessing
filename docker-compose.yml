@@ -18,6 +18,22 @@ services:
       timeout: 5s
       retries: 50
 
+  rabbitmq:
+    image: rabbitmq:3.13-management          
+    container_name: orderprocessing-rabbit
+    ports:
+      - "5672:5672"       
+      - "15672:15672"     
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks: [backend]
+    healthcheck:                         
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 50
+
   api:
     build:
       context: .
@@ -26,6 +42,11 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=DB_PROCESS_ORDER;User Id=sa;Password=Test1234!;TrustServerCertificate=true;"
+      RabbitMq__Host: rabbitmq           
+      RabbitMq__Port: "5672"
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      RabbitMq__Queue: order-queue
     ports:
       - "8080:80"
     depends_on:

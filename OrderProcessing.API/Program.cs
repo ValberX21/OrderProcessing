@@ -2,8 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OrderProcessing.Application.Interface;
 using OrderProcessing.Application.Service;
+using OrderProcessing.Infrastructure;
 using OrderProcessing.Infrastructure.Data;
 using OrderProcessing.Infrastructure.Repository;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -18,6 +20,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Application Services
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+
+builder.Services.AddSingleton<IConnection>(sp =>
+{
+    var factory = new ConnectionFactory()
+    {
+        HostName = "localhost", 
+        Port = 5672
+    };
+    return factory.CreateConnection();
+});
+
+builder.Services.AddSingleton<RabbitMqService>();
 
 // Controllers
 builder.Services.AddControllers();
