@@ -27,7 +27,7 @@ namespace OrderProcessing.Application.Service
 
             order.TotalAmount = order.Items.Sum(item => item.Quantity * item.UnitPrice);
             var orderDto = FromOrder(order);
-            await _rabbitMqService.SendMessage(orderDto);
+            await _rabbitMqService.SendMessage("order-queue",orderDto);
             return await _orderRepository.AddAsync(order);
 
         }

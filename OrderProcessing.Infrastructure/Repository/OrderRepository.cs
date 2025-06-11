@@ -10,7 +10,6 @@ namespace OrderProcessing.Infrastructure.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly RabbitMqService _rabbitMqService;
         public OrderRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -39,7 +38,6 @@ namespace OrderProcessing.Infrastructure.Repository
                     }).ToList() ?? new List<OrderItemDto>()
                 };
 
-                await _rabbitMqService.SendMessage(orderDto);
                 return orderDto;
             }
             catch (Exception ex)

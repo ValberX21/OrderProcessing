@@ -31,7 +31,8 @@ namespace OrderProcessing.Application.Interface
                 arguments: null
             );
         }
-        public Task SendMessage(OrderDto message)
+
+        public Task SendMessage(string queueName, OrderDto message)
         {
             var json = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(json);

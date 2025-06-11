@@ -38,7 +38,7 @@ namespace OrderProcessing.Infrastructure
             _channel = _con.CreateModel();
 
             _channel.QueueDeclare(
-                queue: _queueName, // Use the configured queue name
+                queue: _queueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -46,7 +46,7 @@ namespace OrderProcessing.Infrastructure
             );
         }
 
-        public Task SendMessageAsync(string queueName, OrderDto message)
+        public Task SendMessage(string queueName, OrderDto message)
         {
             var json = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(json);
