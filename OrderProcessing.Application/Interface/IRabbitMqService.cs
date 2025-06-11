@@ -4,6 +4,6 @@ namespace OrderProcessing.Application.Interface
 {
     public interface IRabbitMqService
     {
-        Task SendMessageAsync(string queueName,OrderDto message);
+        Task SendMessage(OrderDto message);
     }
 }
