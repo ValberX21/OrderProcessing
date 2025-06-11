@@ -1,4 +1,5 @@
 using System.Text;
+using Newtonsoft.Json;
 using OrderProcessing.Domain.Entity;
 using RabbitMQ.Client;
 
