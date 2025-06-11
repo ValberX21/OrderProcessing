@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -54,6 +52,24 @@ services:
         condition: service_healthy
     networks:
       - backend
+
+  consumer_container:
+    build:
+      context: .
+      dockerfile: OrderProcessing.Consumer/Dockerfile
+    container_name: consumer_container
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend
+    environment:
+      - RabbitMq__HostName=rabbitmq
+      - RabbitMq__Port=5672
+      - RabbitMq__UserName=guest
+      - RabbitMq__Password=guest
+      - RabbitMq__QueueName=order-queue
+
 
 networks:
   backend:
