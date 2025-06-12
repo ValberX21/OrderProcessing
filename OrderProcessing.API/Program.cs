@@ -7,6 +7,7 @@ using OrderProcessing.Application.Service;
 using OrderProcessing.Infrastructure.Data;
 using OrderProcessing.Infrastructure.Repository;
 using RabbitMQ.Client;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -22,6 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+builder.Services.AddSingleton<IRedisService, RedisService>();
 
 builder.Services.AddSingleton<IConnection>(sp =>
 {
@@ -65,6 +67,13 @@ builder.Services.AddSwaggerGen(options =>
         { securityScheme, Array.Empty<string>() }
     });
 });
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var config = ConfigurationOptions.Parse("redis:6379", true);
+    return ConnectionMultiplexer.Connect(config);
+});
+
 
 var app = builder.Build();
 

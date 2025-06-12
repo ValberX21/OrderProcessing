@@ -70,6 +70,15 @@ services:
       - RabbitMq__Password=guest
       - RabbitMq__QueueName=order-queue
 
+  redis:
+      image: redis:latest
+      container_name: orderprocessing-redis
+      ports:
+        - "6379:6379"
+      networks:
+        - backend
+
+
 
 networks:
   backend:

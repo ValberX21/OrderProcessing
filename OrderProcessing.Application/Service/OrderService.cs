@@ -1,12 +1,9 @@
-﻿using OrderProcessing.Application.DTO;
+﻿using Newtonsoft.Json;
+using OrderProcessing.Application.DTO;
 using OrderProcessing.Application.Interface;
 using OrderProcessing.Domain.Entity;
-using OrderProcessing.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StackExchange.Redis;
+using Order = OrderProcessing.Domain.Entity.Order;
 
 namespace OrderProcessing.Application.Service
 {
@@ -14,11 +11,13 @@ namespace OrderProcessing.Application.Service
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IRabbitMqService _rabbitMqService;
+        private readonly IRedisService _redis;
 
-        public OrderService(IOrderRepository orderRepository, IRabbitMqService rabbitMqService)
+        public OrderService(IOrderRepository orderRepository, IRabbitMqService rabbitMqService, IRedisService redisService)
         {
             _orderRepository = orderRepository;
             _rabbitMqService = rabbitMqService;
+            _redis = redisService;
         }
 
         public async Task<OrderDto> CreateOrderAsync(Order order)
@@ -69,9 +68,21 @@ namespace OrderProcessing.Application.Service
             throw new NotImplementedException();
         }
 
-        public Task<OrderDto> GetOrderByIdAsync(int id)
+        public async Task<OrderDto> GetOrderByIdAsync(int id)
         {
             throw new NotImplementedException();
+            //var cached = await _redis.GetAsync($"order:{id}");
+
+            //if (cached != null)
+            //    return JsonConvert.DeserializeObject<OrderDto>(cached);
+
+            //await _rabbitMqService.SendMessage("order-queue", orderDto);
+
+            //var orderReturn = await _orderRepository.get(order);
+
+            //if (orderReturn != null)
+            //    await _redis.SetAsync($"order:{orderReturn.Id}", JsonConvert.SerializeObject(order));
+            //return orderReturn;
         }
 
         public Task<bool> UpdateOrderAsync(Order order)

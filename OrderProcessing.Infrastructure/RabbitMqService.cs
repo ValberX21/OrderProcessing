@@ -50,11 +50,13 @@ namespace OrderProcessing.Infrastructure
         {
             var json = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(json);
+            var properties = _channel.CreateBasicProperties();
+            properties.DeliveryMode = 2;
 
             _channel.BasicPublish(
                 exchange: "",
                 routingKey: queueName,
-                basicProperties: null,
+                basicProperties: properties,
                 body: body
             );
 

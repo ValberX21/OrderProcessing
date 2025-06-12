@@ -27,14 +27,31 @@ public class MessageConsumerService
                 channel.QueueDeclare(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
+
                 consumer.Received += (model, ea) =>
                 {
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     Console.WriteLine($"[x] Received: {message}");
+
+                    try
+                    {
+                        // TODO: your logic to process message (e.g., save to DB)
+
+                        // Acknowledge only after successful processing
+                        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[!] Error processing message: {ex.Message}");
+
+                        // Optionally: reject and requeue or discard
+                        // channel.BasicNack(ea.DeliveryTag, false, true); // true to requeue
+                    }
                 };
 
-                channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+
+                channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
 
                 Console.WriteLine("Listening for message. Press Ctrl+C to exit.");
                 Thread.Sleep(Timeout.Infinite);
