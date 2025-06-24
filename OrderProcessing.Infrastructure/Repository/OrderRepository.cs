@@ -67,5 +67,28 @@ namespace OrderProcessing.Infrastructure.Repository
                         }).ToList()
                     }).ToListAsync();
         }
+
+        public async Task<OrderDto?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Order
+           .Include(o => o.Items)
+           .Where(o => o.Id == id)
+           .Select(order => new OrderDto
+           {
+               Id = order.Id,
+               OrderNumber = order.OrderNumber,
+               CreatedAt = order.CreatedAt,
+               TotalAmount = order.TotalAmount,
+               Status = order.Status,
+               Items = order.Items.Select(item => new OrderItemDto
+               {
+                   ProductId = item.ProductId,
+                   ProductName = item.ProductName,
+                   Quantity = item.Quantity,
+                   UnitPrice = item.UnitPrice
+               }).ToList()
+           })
+           .FirstOrDefaultAsync();
+        }
     }
 }

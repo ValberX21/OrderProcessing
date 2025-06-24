@@ -43,5 +43,19 @@ namespace OrderProcessing.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetOrderById/{id}")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            try
+            {
+               OrderDto order = await _orderService.GetOrderByIdAsync(id);
+               return Ok(new { order });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

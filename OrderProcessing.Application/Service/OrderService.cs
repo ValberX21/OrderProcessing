@@ -70,19 +70,7 @@ namespace OrderProcessing.Application.Service
 
         public async Task<OrderDto> GetOrderByIdAsync(int id)
         {
-            throw new NotImplementedException();
-            //var cached = await _redis.GetAsync($"order:{id}");
-
-            //if (cached != null)
-            //    return JsonConvert.DeserializeObject<OrderDto>(cached);
-
-            //await _rabbitMqService.SendMessage("order-queue", orderDto);
-
-            //var orderReturn = await _orderRepository.get(order);
-
-            //if (orderReturn != null)
-            //    await _redis.SetAsync($"order:{orderReturn.Id}", JsonConvert.SerializeObject(order));
-            //return orderReturn;
+            return await _orderRepository.GetByIdAsync(id);
         }
 
         public Task<bool> UpdateOrderAsync(Order order)

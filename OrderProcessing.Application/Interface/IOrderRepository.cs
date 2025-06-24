@@ -6,5 +6,6 @@ namespace OrderProcessing.Application.Interface
     {
         Task<OrderDto> AddAsync(Order order);
         Task<IEnumerable<OrderDto>> GetAllAsync();
+        Task<OrderDto?> GetByIdAsync(int id);
     }
 }
